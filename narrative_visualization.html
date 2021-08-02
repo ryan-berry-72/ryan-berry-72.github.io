@@ -1,0 +1,389 @@
+<html>
+    <h1>
+        Euchre Card Evaluation
+    </h1>
+    <h2>
+        by Ryan Berry
+    </h2>
+    <div id=question1 class=question>
+        What is Euchre?
+    </div>
+    <div id=intro1 class=explanation>
+        Euchre is a "trick-taking" card game where two teams of 2 compete to win points by taking tricks. The game only includes 24 cards from the original 52-card deck. Any card below a 9 is removed and not used.
+    </div>
+    <div id=intro2 class=explanation>
+        A "trick" is comprised of 4 cards, where each player plays a single card. The player who plays the highest card wins the trick for their team.
+    </div>
+    <div id=intro3 class=explanation>
+        Since each player starts with 5 cards, a "round" is over after five tricks have been played. The team that wins more tricks at the end of the round receives point(s).
+    </div>
+    <div id=intro4 class=explanation>
+        Once a team reaches 10 points, the game is over and that team wins.
+    </div>
+    <div id=videoPrompt class=moreInfo>
+        *NOTE* If you have never played this game before, I suggest watching the tutorial below. 
+        Pay particular attention to the concept of "Trump Suit" and the hierachy of cards.
+    </div>
+
+    <div id=youtubeLink>
+        <a href="url">https://www.youtube.com/watch?v=XBC_lNo-CsE</a>
+    </div>
+
+    <div id=question2 class=question>
+        What is the purpose of this evaluation?
+    </div>
+    <div id=purpose1 class=explanation>
+        This exercise evaluates the relationship between the cards in a Euchre Deck and their effectiveness over the course of a round.
+    </div>
+    <div id=purpose2 class=explanation>
+        Recall that a round is made up of 5 tricks, and each trick is made up of 4 "plays".
+    </div>
+    <div id=purpose3 class=explanation>
+        Since Euchre is a complex game, there are nuances that can be mastered. Use this exercise to improve your play style or support your current style! 
+    </div>
+
+    <div id=question3 class=question>
+        How to use this exercise
+    </div>
+    <div id=use1 class=explanation>
+        Try focusing on a particular card and pay attention to how its value (measured in probability to win a trick) changes over time.
+    </div>
+    <div id=use2 class=explanation>
+        For Example, the card at "rank" 8, a non-trump-colored Ace, is particularly effective toward the beginning of a round. In fact, it is the second most effective card in the game when played at Trick 1, Play 1. However, its value falls off later.
+    </div>
+    <div id=use3 class=explanation>
+        The "rank" of a card is determined by the hierarchy of cards after a Trump Suit is chosen. Ranks 1-7 denote Trump Cards and 8-24 are non-trump cards.
+    </div>
+    <div id=use4 class=explanation>
+        If spades is the Trump Suit, then the Jack of Spades is ranked 1. 
+        Since the Jack of the same colored suit (clubs in this case) is considered a Spade, the Jack of Clubs is ranked 2 and the Ace of Spades is ranked 3. The round now contains 7 spades, 6 hearts, 6 diamonds and 5 clubs. 
+        Clubs are now known as the "green-suit" and are considered worse than the other non-trump suits. For this reason, rank 8 includes the Aces of Hearts and Diamonds, while rank 10 is reserved for the Ace of Clubs.
+    </div>
+
+    <div id=question4 class=question>
+        Where does the data come from?
+    </div>
+    <div id=origin1 class=explanation>
+        After creating a Python-based, simulated version of Euchre, I collected data from over 40,000 rounds of the game. 
+        This resulted in millions of unique datapoints.
+    </div>
+    <div id=origin2 class=explanation>
+        In order to account for players at all levels, the simulated players employed a randomized card choosing strategy. 
+        Therefore, it is more important to compare the relative positions of a card rank's bars rather than interpreting the probabilities literally.
+    </div>
+
+    <style>
+        h1 {
+            font-family: monaco;
+            text-align: center;
+            width: 100%;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: linen;
+            background-image: linear-gradient(to bottom, linen, white, linen);
+            color: black;
+        }
+        h2 {
+            font-family: monaco;
+            font-size: 20px;
+            text-align: center;
+            width: 100%;
+            height: 25px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: linen;
+            color: black;
+            margin-bottom: 75px;
+        }
+        body {
+            background-color: linen;
+            color: black;
+        }
+        .evaluation {
+            font-family: Monaco;
+            position: relative;
+            left: 30%;
+            -webkit-transform: translateX(-20%);
+            -ms-transform: translateX(-20%);
+            transform: translateX(-20%);
+        }
+        .explanation {
+            word-wrap: break-word;
+            width: 300px;
+            font-family: monaco;
+            margin:auto;
+            margin-bottom: 5px;
+            width: 50%;
+            /* border: 2px solid black; */
+            padding: 12px;
+        }
+        .question {
+            font-size: 24px;
+            word-wrap: break-word;
+            width: 300px;
+            font-family: monaco;
+            margin:auto;
+            width: 50%;
+            padding: 12px;
+        }
+        .moreInfo {
+            font-size: 16px;
+            word-wrap: break-word;
+            font-family: monaco;
+            margin:auto;
+            width: 50%;
+            padding: 12px;
+        }
+        #youtubeLink {
+            font-size: 14px;
+            word-wrap: break-word;
+            font-family: monaco;
+            margin:auto;
+            margin-bottom:50px;
+            width: 50%;
+            padding: 12px;
+        }
+        #purpose3 {
+            margin-bottom: 50px;
+        }
+        #use4 {
+            margin-bottom: 50px;
+        }
+        #origin2 {
+            margin-bottom: 50px;
+        }
+
+    </style>
+    <script src='https://d3js.org/d3.v5.min.js'></script>
+    <svg class=evaluation id=chartSvg width=800 height=650></svg>
+    <svg class=evaluation id=trickPageSvg width=400 height=100></svg>
+    <svg class=evaluation id=playPageSvg width=400 height=100></svg>
+
+    <body onload=init()>
+        <script>
+            var currentTrick = 'ALL';
+            var currentPlay = 'ALL';
+            var previousTrick = 'ALL';
+            var previousPlay = 'ALL';
+            var formatDecimal = d3.format(',.3f');
+            var labelFontSize = '18px';
+            var tickFontSize = '14px';
+
+            const cardRanks = [1,2,3,4,5,6,7,8,10,11,13,14,16,17,19,21,22,24];
+
+            let probabilities = [];
+
+            async function init() {
+                var trickPages = ['ALL',1,2,3,4,5];
+                var playPages = ['ALL',1,2,3,4];
+                probabilities = await createProbabilityMatrix();
+                console.log(probabilities);
+                updateChartSvg();
+
+                createPageButtons(d3.select('#trickPageSvg'), trickPages, 'Select Trick Number:', true);
+                createPageButtons(d3.select('#playPageSvg'), playPages, 'Select Play Number:', false);
+
+
+                console.log('Initialized');
+            }
+
+            async function createProbabilityMatrix() {
+                console.log('Retrieving play data');
+                var playData = await d3.csv('https://raw.githubusercontent.com/ryan-berry-72/euchre/main/1000_random_euchre_by_play_number.csv');
+                console.log('Data retrieved successfully!');
+
+                let probs = [];
+                for(i=0; i<=5; i++) {
+                    probs[i]=[];
+                    for(j=0; j<=4; j++) {
+                        probs[i][j]=[];
+                        for(k=0; k<cardRanks.length; k++) {
+                            // console.log(i+','+j+','+cardRanks[k]);
+                            probs[i][j][k] = determineProbability(playData, i,j,cardRanks[k]);
+                        }
+                    }
+                }
+                return probs;
+            }
+
+            function determineProbability(data, trick, play, cardRank) {
+                var prob = 0;
+                if(trick==0 && play==0) {
+                    prob = formatDecimal(d3.mean(data.map(function(d) {if(d.CardRank==cardRank) return d.WinProbability;})))
+                } else if(trick==0) {
+                    prob = formatDecimal(d3.mean(data.map(function(d) {if(d.PlayNumber==play && d.CardRank==cardRank) return d.WinProbability;})))
+                } else if(play==0) {
+                    prob = formatDecimal(d3.mean(data.map(function(d) {if(d.TrickNumber==trick && d.CardRank==cardRank) return d.WinProbability;})))
+                } else {
+                    prob = formatDecimal(d3.mean(data.map(function(d) {if(d.TrickNumber==trick && d.PlayNumber==play && d.CardRank==cardRank) return d.WinProbability;})))
+                }
+                return prob;
+            }
+
+            async function updateChartSvg() {
+                // Clear current chart
+                d3.selectAll('#chartSvg > *').remove();
+
+                var currTrick = getIndex(currentTrick);
+                var currPlay = getIndex(currentPlay);
+                var prevTrick = getIndex(previousTrick);
+                var prevPlay = getIndex(previousPlay);
+                var prevData = probabilities[prevTrick][prevPlay];
+                var currData = probabilities[currTrick][currPlay];
+
+                var chartSvg = d3.select('#chartSvg');
+
+                var leftMargin = 100;
+                var topMargin = 75;
+                var svgWidth = parseInt(chartSvg.style('width'));
+                var svgHeight = parseInt(chartSvg.style('height'));
+                var chartWidth = svgWidth - (2*leftMargin);
+                var chartHeight = svgHeight - (2*topMargin);
+                var barWidth = chartWidth/cardRanks.length;
+                var xs = d3.scaleBand().domain(cardRanks).range([0,chartWidth]);
+                var ys = d3.scaleLinear().domain([0,1]).range([chartHeight,0]);
+
+                chartSvg.selectAll('rect')
+                    .data([1])
+                    .enter()
+                    .append('rect')
+                    .attr('width',svgWidth)
+                    .attr('height',svgHeight)
+                    .style('fill','none')
+                    .style('stroke','black')
+                    .style('stroke-width','3');
+
+                chartSvg.append('g')
+                    .attr('transform','translate('+leftMargin+','+topMargin+')')
+                    .selectAll('rect')
+                    .data(currData)
+                    .enter()
+                    .append('rect')
+                    .attr('x', function(d,i) {return xs(cardRanks[i]);})
+                    .attr('y', function(d,i) {return ys(d);})
+                    .attr('width', function(d,i) {return barWidth;})
+                    .attr('height', function(d,i) {return chartHeight - ys(d);})
+                    .on('mouseover',function(d,i){chartSvg.append('text')
+                        .attr('id','tooltip')
+                        .attr('x',d3.event.x-2.5*leftMargin)
+                        .attr('y',d3.event.y-3*topMargin)
+                        .text('Rank '+cardRanks[i]+', Prob '+d);
+                        d3.select(this).style('fill','linen');
+                    })
+                    .on('mousemove',function(d,i) {chartSvg.select('#tooltip')
+                        .attr('x',d3.event.x-2.5*leftMargin)
+                        .attr('y',d3.event.y-3*topMargin);
+                    })
+                    .on('mouseout',function(d,i) {d3.select(this)
+                        .style('fill','lightsteelblue');
+                        chartSvg.select('#tooltip')
+                            .remove();
+                    })
+                    .style('fill','lightSteelBlue')
+                    .style('stroke','black');
+
+                var chartBottom = topMargin+chartHeight;
+                // Add axes
+                chartSvg.append('g')
+                    .attr('transform','translate('+leftMargin+','+topMargin+')')
+                    .call(d3.axisLeft(ys)
+                        .tickValues([0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1])
+                        .tickFormat(d3.format(',.1f')))
+                    .style('font-size',tickFontSize);
+                chartSvg.append('g')
+                    .attr('transform','translate('+leftMargin+','+chartBottom+')')
+                    .call(d3.axisBottom(xs)
+                        .tickValues(cardRanks)
+                        .tickFormat(d3.format('~s')))
+                    .style('font-size',tickFontSize);
+
+                // Add axes labels
+                chartSvg.append("text")
+                .attr("class", "x label")
+                .attr("text-anchor", "end")
+                .attr("x", "50%")
+                .attr("y", "97%")
+                .style('font-size',labelFontSize)
+                .text("Card Rank");
+                chartSvg.append("text")
+                .attr("class", "x label")
+                .attr("text-anchor", "end")
+                .attr("x", "-30%")
+                .attr("y", "5%")
+                .attr("dy", '0.75em')
+                .attr("transform", "rotate(-90)")
+                .style('font-size',labelFontSize)
+                .text("Probability to Win Trick");
+
+                //Add Title
+                chartSvg.append("text")
+                    .attr("x", svgWidth/2)             
+                    .attr("y", topMargin)
+                    .attr("text-anchor", "middle")  
+                    .style("font-size", "26px") 
+                    .style("text-decoration", "underline")  
+                    .text("Trick "+currentTrick+", Play "+currentPlay);
+            }
+
+            function createPageButtons(svg, data, prompt, isTrickNumber) {
+                var buttonWidth = 40;
+                var buttonHeight = 20;
+                var buttonMargin = 30;
+                var buttons = svg.selectAll("g")
+                    .data(data)
+                    .enter()
+                    .append("g");
+                    // .attr("transform", 'translate('+buttonMargin+','+buttonMargin+')');
+
+                buttons.append("rect")
+                    .attr('x',function(d,i) {return 1.5*buttonMargin*i+buttonMargin;})
+                    .attr('y',buttonMargin)
+                    .attr("width", buttonWidth)
+                    .attr("height", buttonHeight)
+                    .style('fill','lightgray')
+                    .style('stroke','black')
+                    .on('mouseover',function(d,i){d3.select(this).style('fill','gray');})
+                    .on('mouseout',function(d,i){d3.select(this).style('fill','lightgray');});
+
+                buttons.append("text")
+                    .attr("x", function(d,i) {var increment=3; if(i>=1) increment=10;  return 1.55*buttonMargin*i+buttonMargin+increment;})
+                    .attr("y", buttonMargin)
+                    .attr("dy", "1em")
+                    .on('mouseover',function(d,i){d3.select(this).style('cursor','pointer');})
+                    .on('click',function(d,i){d3.select(this).style('fill','purple');
+                        if(isTrickNumber) 
+                        { updateSelection(d,-1); }
+                        else { updateSelection(-1,d); }
+                    })
+                    .text(function(d) { return d; });
+
+                buttons.append('text')
+                    .attr('x',buttonMargin)
+                    .attr('y',buttonMargin-5)
+                    .text(prompt);
+
+                console.log('Created page buttons for data: ' + data);
+            }
+
+            function updateSelection(trickNumber, playNumber) {
+                if(trickNumber!=-1) {
+                    previousTrick = currentTrick;
+                    currentTrick = trickNumber;
+                }
+                if(playNumber!=-1) {
+                    previousPlay = currentPlay;
+                    currentPlay = playNumber;
+                }
+                updateChartSvg();
+                console.log(currentTrick+','+currentPlay);
+            }
+
+            function getIndex(value) {
+                return value=='ALL' ? 0 : value;
+            }
+        </script>
+    </body>
+</html>
