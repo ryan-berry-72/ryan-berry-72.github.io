@@ -1,6 +1,6 @@
 <html>
     <h1>
-        Euchre Card Playing Evaluation2
+        Euchre Card Play Evaluation
     </h1>
     <h2>
         by Ryan Berry
@@ -9,13 +9,13 @@
         What is Euchre?
     </div>
     <div id=intro1 class=explanation>
-        Euchre is a "trick-taking" card game where two teams of 2 compete to win points by taking tricks. The game only includes 24 cards from the original 52-card deck. Any card below a 9 is removed and not used.
+        Euchre is a "trick-taking" card game where two teams of two compete to win points by taking tricks. The game only includes 24 cards from the original 52-card deck. Cards 2 through 8 are removed and not used.
     </div>
     <div id=intro2 class=explanation>
-        A "trick" is comprised of 4 cards, where each player plays a single card. The player who plays the highest card wins the trick for their team.
+        A "trick" is comprised of four cards, where each player plays a single card. The player who plays the highest card wins the trick for their team.
     </div>
     <div id=intro3 class=explanation>
-        Since each player starts with 5 cards, a "round" is over after five tricks have been played. The team that wins more tricks at the end of the round receives point(s).
+        Since each player starts with five cards, a "round" is over after five tricks have been played. The team that wins more tricks at the end of the round receives point(s).
     </div>
     <div id=intro4 class=explanation>
         Once a team reaches 10 points, the game is over and that team wins.
@@ -36,7 +36,9 @@
         This exercise evaluates the relationship between the cards in a Euchre Deck and their effectiveness over the course of a round.
     </div>
     <div id=purpose2 class=explanation>
-        Recall that a round is made up of 5 tricks, and each trick is made up of 4 "plays".
+        Recall that a round is made up of five tricks, and each trick is made up of four "plays". This creates 20 unique game states in a round of Euchre.
+        We can also include the average across all tricks and all plays, which results in 30 game states. 
+
     </div>
     <div id=purpose3 class=explanation>
         Since Euchre is a complex game, there are nuances that can be mastered. Use this exercise to improve your play style or support your current style! 
@@ -56,20 +58,20 @@
     </div>
     <div id=use4 class=explanation>
         If spades is the Trump Suit, then the Jack of Spades is ranked 1. 
-        Since the Jack of the same colored suit (clubs in this case) is considered a Spade, the Jack of Clubs is ranked 2 and the Ace of Spades is ranked 3. The round now contains 7 spades, 6 hearts, 6 diamonds and 5 clubs. 
-        Clubs are now known as the "green-suit" and are considered worse than the other non-trump suits. For this reason, rank 8 includes the Aces of Hearts and Diamonds, while rank 10 is reserved for the Ace of Clubs.
+        Since the Jack of the same colored suit (clubs in this case) is considered a spade, the Jack of Clubs is ranked 2 and the Ace of Spades is ranked 3. This round contains 7 spades, 6 hearts, 6 diamonds and 5 clubs. 
+        Clubs are now known as the "green-suit" and considered worse than other non-trump suits. For this reason, rank 8 includes the Aces of Hearts and Diamonds, while rank 10 is reserved for the Ace of Clubs.
     </div>
 
     <div id=question4 class=question>
         Where does the data come from?
     </div>
     <div id=origin1 class=explanation>
-        After creating a Python-based, simulated version of Euchre, I collected data from over 40,000 rounds of the game. 
+        After developing a Python-based, simulated version of Euchre, I collected data from over 40,000 rounds of the game. 
         This resulted in millions of unique datapoints.
     </div>
     <div id=origin2 class=explanation>
         In order to account for players at all levels, the simulated players employed a randomized card choosing strategy. 
-        Therefore, it is more important to compare the relative positions of a card rank's bars rather than interpreting the probabilities literally.
+        Therefore, it is more important to compare the relative positions of the chart's bars rather than interpreting the probabilities literally.
     </div>
 
     <style>
@@ -128,6 +130,7 @@
             margin:auto;
             width: 50%;
             padding: 12px;
+            border-top: 2px solid black;
         }
         .moreInfo {
             font-size: 16px;
@@ -158,6 +161,7 @@
 
     </style>
     <script src='https://d3js.org/d3.v5.min.js'></script>
+    <script src="https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js"></script>
     <svg class=evaluation id=chartSvg width=800 height=650></svg>
     <svg class=evaluation id=trickPageSvg width=400 height=100></svg>
     <svg class=evaluation id=playPageSvg width=400 height=100></svg>
@@ -179,6 +183,7 @@
             async function init() {
                 var trickPages = ['ALL',1,2,3,4,5];
                 var playPages = ['ALL',1,2,3,4];
+                var firstDisplay = true;
                 probabilities = await createProbabilityMatrix();
                 console.log(probabilities);
                 updateChartSvg();
@@ -262,6 +267,8 @@
                     .data(currData)
                     .enter()
                     .append('rect')
+                    .attr('class','bar')
+                    .attr('id',function(d,i){return 'barRank'+cardRanks[i];})
                     .attr('x', function(d,i) {return xs(cardRanks[i]);})
                     .attr('y', function(d,i) {return ys(d);})
                     .attr('width', function(d,i) {return barWidth;})
@@ -326,12 +333,45 @@
                     .style("font-size", "26px") 
                     .style("text-decoration", "underline")  
                     .text("Trick "+currentTrick+", Play "+currentPlay);
+
+                //Add annotations
+                var annotation;
+                if(currTrick==0 && currPlay==0) {
+                    annotation = createAnnotationCall('','Off-suit aces are more powerful than most trump cards',350,350,25,-25);
+                    chartSvg.append('g')
+                        .call(annotation);
+                }
+                if(currTrick==1 && currPlay==1) {
+                    annotation = createAnnotationCall('','There is no better time to play an off-suit ace',350,225,25,-25);
+                    chartSvg.append('g')
+                        .call(annotation);
+                }
+                if(currTrick==1 && currPlay==0) {
+                    annotation = createAnnotationCall('','Try clicking through the tricks and observe which cards improve and which cards become worse',500,200,0,0);
+                    chartSvg.append('g')
+                        .call(annotation);
+                }
+                if(currTrick==5 && currPlay==0) {
+                    annotation = createAnnotationCall('','Trump cards improve over time, while high off-suit cards become worse',500,200,0,0);
+                    chartSvg.append('g')
+                        .call(annotation);
+                }
+                if(currTrick==5 && currPlay==1) {
+                    annotation = createAnnotationCall('','Leading the final trick has the best odds of winning',500,200,0,0);
+                    chartSvg.append('g')
+                        .call(annotation);
+                }
+                if(currTrick==0 && currPlay==1) {
+                    annotation = createAnnotationCall('','Trump cards win more often when played second, third or fourth',250,425,25,-175);
+                    chartSvg.append('g')
+                        .call(annotation);
+                }
             }
 
             function createPageButtons(svg, data, prompt, isTrickNumber) {
                 var buttonWidth = 40;
                 var buttonHeight = 20;
-                var buttonMargin = 30;
+                var buttonMargin = 25;
                 var buttonType = (isTrickNumber ? 'trick' : 'play') + 'Button';
                 var buttons = svg.selectAll("g")
                     .data(data)
@@ -347,27 +387,23 @@
                     .attr("height", buttonHeight)
                     .attr('class', buttonType)
                     .attr('id', function (d,i) {return buttonType+i;})
-                    .style('fill','lightgray')
-                    .style('stroke','black');
-                    // .on('mouseover',function(d,i){
-                    //     d3.select(this).style('fill','gray');
-                    // })
-                    // .on('mouseout',function(d,i){d3.select(this).style('fill','lightgray');});
+                    .style('fill',function(d,i){return i==0 ? 'gray' : 'lightgray';})
+                    .style('stroke','black')
+                    .on('mouseover',function(d,i){
+                        d3.select(this)
+                        .attr('cursor','pointer');
+                    })
+                    .on('click',function(d,i){clickButton(d,i)});
 
                 buttons.append("text")
                     .attr("x", function(d,i) {var increment=3; if(i>=1) increment=10;  return 1.55*buttonMargin*i+buttonMargin+increment;})
                     .attr("y", buttonMargin)
                     .attr("dy", "1em")
-                    .on('mouseover',function(d,i){d3.select(this).style('cursor','pointer');})
+                    .on('mouseover',function(d,i){d3.select(this)
+                        .style('cursor','pointer');
+                    })
                     .on('click',function(d,i){
-                        d3.select(this).style('fill','purple');
-                        if(isTrickNumber) 
-                        { updateSelection(d,-1); }
-                        else { updateSelection(-1,d); }
-                        d3.selectAll('.'+buttonType)
-                            .style('fill','lightgray')
-                        d3.select('#'+buttonType+i)
-                            .style('fill','gray');
+                        clickButton(d,i);
                     })
                     .text(function(d) { return d; });
 
@@ -375,6 +411,19 @@
                     .attr('x',buttonMargin)
                     .attr('y',buttonMargin-5)
                     .text(prompt);
+
+                function clickButton(d,i) {
+                    if(isTrickNumber) { 
+                        updateSelection(d,-1); 
+                    }
+                    else { 
+                        updateSelection(-1,d); 
+                    }
+                    d3.selectAll('.'+buttonType)
+                        .style('fill','lightgray')
+                    d3.select('#'+buttonType+i)
+                        .style('fill','gray');
+                }
 
                 console.log('Created page buttons for data: ' + data);
             }
@@ -394,6 +443,21 @@
 
             function getIndex(value) {
                 return value=='ALL' ? 0 : value;
+            }
+
+            function createAnnotationCall(title, label, x, y, dx, dy) {
+                return d3.annotation().annotations([
+                {
+                    note: {
+                    label: label,
+                    title: title
+                    },
+                    x: x,
+                    y: y,
+                    dx: dx,
+                    dy: dy
+                }
+                ]);
             }
         </script>
     </body>
