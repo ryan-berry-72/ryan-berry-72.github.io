@@ -1,6 +1,6 @@
 <html>
     <h1>
-        Euchre Card Evaluation
+        Euchre Card Playing Evaluation2
     </h1>
     <h2>
         by Ryan Berry
@@ -332,10 +332,12 @@
                 var buttonWidth = 40;
                 var buttonHeight = 20;
                 var buttonMargin = 30;
+                var buttonType = (isTrickNumber ? 'trick' : 'play') + 'Button';
                 var buttons = svg.selectAll("g")
                     .data(data)
                     .enter()
-                    .append("g");
+                    .append("g")
+                    .attr('class','buttonsGroup');
                     // .attr("transform", 'translate('+buttonMargin+','+buttonMargin+')');
 
                 buttons.append("rect")
@@ -343,20 +345,29 @@
                     .attr('y',buttonMargin)
                     .attr("width", buttonWidth)
                     .attr("height", buttonHeight)
+                    .attr('class', buttonType)
+                    .attr('id', function (d,i) {return buttonType+i;})
                     .style('fill','lightgray')
-                    .style('stroke','black')
-                    .on('mouseover',function(d,i){d3.select(this).style('fill','gray');})
-                    .on('mouseout',function(d,i){d3.select(this).style('fill','lightgray');});
+                    .style('stroke','black');
+                    // .on('mouseover',function(d,i){
+                    //     d3.select(this).style('fill','gray');
+                    // })
+                    // .on('mouseout',function(d,i){d3.select(this).style('fill','lightgray');});
 
                 buttons.append("text")
                     .attr("x", function(d,i) {var increment=3; if(i>=1) increment=10;  return 1.55*buttonMargin*i+buttonMargin+increment;})
                     .attr("y", buttonMargin)
                     .attr("dy", "1em")
                     .on('mouseover',function(d,i){d3.select(this).style('cursor','pointer');})
-                    .on('click',function(d,i){d3.select(this).style('fill','purple');
+                    .on('click',function(d,i){
+                        d3.select(this).style('fill','purple');
                         if(isTrickNumber) 
                         { updateSelection(d,-1); }
                         else { updateSelection(-1,d); }
+                        d3.selectAll('.'+buttonType)
+                            .style('fill','lightgray')
+                        d3.select('#'+buttonType+i)
+                            .style('fill','gray');
                     })
                     .text(function(d) { return d; });
 
