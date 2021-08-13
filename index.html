@@ -36,12 +36,13 @@
         This exercise evaluates the relationship between the cards in a Euchre Deck and their effectiveness over the course of a round.
     </div>
     <div id=purpose2 class=explanation>
-        Recall that a round is made up of five tricks, and each trick is made up of four "plays". This creates 20 unique game states in a round of Euchre.
-        We can also include the average across all tricks and all plays, which results in 30 game states. 
+        Recall that a round is made up of five tricks, and each trick is made up of four "plays". This creates 20 unique game states in a round.
+        The evaluation reveals Euchre cards' win probabilities across these 20 game states in addition to an average against each dimension.
+        So, in total, there are 30 unique charts to analyze.
 
     </div>
     <div id=purpose3 class=explanation>
-        Since Euchre is a complex game, there are nuances that can be mastered. Use this exercise to improve your play style or support your current style! 
+        Since Euchre is a complex game, there are nuances that can be mastered. Use this exercise to develop new play styles or improve your current style! 
     </div>
 
     <div id=question3 class=question>
@@ -58,7 +59,7 @@
     </div>
     <div id=use4 class=explanation>
         If spades is the Trump Suit, then the Jack of Spades is ranked 1. 
-        Since the Jack of the same colored suit (clubs in this case) is considered a spade, the Jack of Clubs is ranked 2 and the Ace of Spades is ranked 3. This round contains 7 spades, 6 hearts, 6 diamonds and 5 clubs. 
+        Since the Jack of the same colored suit (clubs in this case) is considered a spade, the Jack of Clubs is ranked 2 and the Ace of Spades is ranked 3. This example round contains 7 spades, 6 hearts, 6 diamonds and 5 clubs. 
         Clubs are now known as the "green-suit" and considered worse than other non-trump suits. For this reason, rank 8 includes the Aces of Hearts and Diamonds, while rank 10 is reserved for the Ace of Clubs.
     </div>
 
@@ -71,7 +72,7 @@
     </div>
     <div id=origin2 class=explanation>
         In order to account for players at all levels, the simulated players employed a randomized card choosing strategy. 
-        Therefore, it is more important to compare the relative positions of the chart's bars rather than interpreting the probabilities literally.
+        Therefore, it is more important to compare the relative positions of the chart's bars rather than interpret the probabilities literally.
     </div>
 
     <style>
@@ -163,9 +164,10 @@
     <script src='https://d3js.org/d3.v5.min.js'></script>
     <script src="https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js"></script>
     <svg class=evaluation id=chartSvg width=800 height=650></svg>
-    <svg class=evaluation id=trickPageSvg width=400 height=100></svg>
-    <svg class=evaluation id=playPageSvg width=400 height=100></svg>
-    <svg class=evaluation id=spacer width=800 height=100></svg>
+    <svg class=evaluation id=spacer width=1200 height=25></svg>
+    <svg class=evaluation id=trickPageSvg width=1200 height=50></svg>
+    <svg class=evaluation id=playPageSvg width=1200 height=50></svg>
+    <svg class=evaluation id=spacer2 width=1200 height=100></svg>
 
     <body onload=init()>
         <script>
@@ -373,13 +375,14 @@
                 var buttonWidth = 40;
                 var buttonHeight = 20;
                 var buttonMargin = 25;
+                var leftMargin = 300;
                 var buttonType = (isTrickNumber ? 'trick' : 'play') + 'Button';
                 var buttons = svg.selectAll("g")
                     .data(data)
                     .enter()
                     .append("g")
-                    .attr('class','buttonsGroup');
-                    // .attr("transform", 'translate('+buttonMargin+','+buttonMargin+')');
+                    .attr('class','buttonsGroup')
+                    .attr("transform", 'translate('+leftMargin+',0)');
 
                 buttons.append("rect")
                     .attr('x',function(d,i) {return 1.5*buttonMargin*i+buttonMargin;})
